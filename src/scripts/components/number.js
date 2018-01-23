@@ -10,7 +10,9 @@ class Number extends React.PureComponent {
   }
 
   clickHandler() {
-    console.log('Click on ' + this.props.number);
+   if(!this.props.isUsed) {
+     this.props.onClick(this.props.number)
+   }
   }
 
   style() {
