@@ -28,6 +28,7 @@ class Game extends React.Component {
     this.onNumberClick = this.onNumberClick.bind(this)
     this.numbers = _.range(1, 10);
     this.stars = _.range(1 + Math.floor(9 * Math.random()));
+    this.selectionIsWrong = false;
 
   }
 
@@ -75,7 +76,7 @@ class Game extends React.Component {
       }
 
       const selectedSum = _.sum(selectedNumbers);
-      this.selectionIsWrong = selectedSum > this.state.stars;
+      this.selectionIsWrong = selectedSum > this.stars.length;
 
 
       if(selectedSum === this.stars.length) {
@@ -96,6 +97,20 @@ class Game extends React.Component {
     })
   }
 
+  numberStatus(number) {
+    console.log('GETTING CALLED')
+    if (this.state.usedNumbers.indexOf(number) >= 0) {
+      return 'used'
+    }
+    const isSelected =
+      this.state.selectedNumbers.indexOf(number) >=0;
+    if (isSelected) {
+      return this.selectionIsWrong ? 'wrong' :'selected';
+    }
+    return 'available'
+
+  }
+
   render() {
     console.log(this.gameIsDone)
     return (
@@ -110,18 +125,11 @@ class Game extends React.Component {
           </div>
           <div className="play-numbers">
           {this.numbers.map(number => {
-            const isUsed =
-              this.state.usedNumbers.indexOf(number) >= 0;
-            const isSelected =
-              this.state.selectedNumbers.indexOf(number) >= 0;
-
               return (
                 <Number
                  key={number}
                  number={number}
-                 isUsed={isUsed}
-                 isSelected={isSelected}
-                 selectionIsWrong={this.selectionIsWrong}
+                 status={this.numberStatus(number)}
                  onClick={this.onNumberClick}
                   />
               )

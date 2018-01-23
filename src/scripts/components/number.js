@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React  from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import colors from './colors.js';
@@ -10,24 +10,21 @@ class Number extends React.PureComponent {
   }
 
   clickHandler() {
-   if(!this.props.isUsed) {
+   if(!this.props.status !== 'used') {
      this.props.onClick(this.props.number)
    }
   }
 
-  style() {
-    if(this.props.isUsed) {
-      return {backgroundColor: colors.used}
-    }
+  componentDidUpdate() {
+    console.log('Numebr updated');
+   }
 
-    if(this.props.isSelected) {
-      return {
-        backgroundColor: this.props.selectionIsWrong
-          ? colors.wrong
-          : colors.selected,
-      }
-    }
-    return {}
+   componentWillUpdate(nextProps) {
+    console.log(this.props, nextProps);
+   }
+
+  style() {
+    return { backgroundColor: colors[this.props.status]}
   }
 
   render() {

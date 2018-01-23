@@ -1,4 +1,5 @@
 const colors = {
+  available: '#eee',
   used: 'lightgreen',
   wrong: 'lightcoral',
   selected: 'deepskyblue',
