@@ -23,7 +23,9 @@ class Game extends React.Component {
     super(props)
     this.state = {
       selectedNumbers: [],
-      usedNumbers: []
+      usedNumbers: [],
+      seconds: 5
+
     }
     this.onNumberClick = this.onNumberClick.bind(this)
     this.numbers = _.range(1, 10);
@@ -52,22 +54,68 @@ class Game extends React.Component {
      )
    }
 
+   renderGameOver() {
+    return (
+      <div className="game-done">
+         <div className="message">Unlucky</div>
+         <button onClick={this.resetGame}>Play again</button>
+       </div>
+    )
+  }
+
+  secondsToTime(secs){
+    let hours = Math.floor(secs / (60 * 60));
+
+    let divisor_for_minutes = secs % (60 * 60);
+    let minutes = Math.floor(divisor_for_minutes / 60);
+
+    let divisor_for_seconds = divisor_for_minutes % 60;
+    let seconds = Math.ceil(divisor_for_seconds);
+
+    let obj = {
+      "h": hours,
+      "m": minutes,
+      "s": seconds
+    };
+    return obj;
+  }
+
+
+
    resetGame = () => {
     this.stars = _.range(randomSum(this.numbers, 9));
     this.gameIsDone = false;
     this.setState({
     selectedNumbers: [],
     usedNumbers: [],
+    seconds: 5
     });
    }
 
+   startTimer() {
+      this.timer = setInterval(this.countDown.bind(this), 1000);
+   }
+
+   countDown() {
+    if(this.state.seconds >= 0) {
+      let seconds = this.state.seconds -1
+      console.log(this.state.seconds)
+      this.setState({
+        seconds: seconds
+      })
+    }
+    if(this.state.seconds === 0) {
+      this.gameIsDone = true
+    }
+   }
+
   onNumberClick(number) {
+    this.startTimer()
     this.setState(prevState => {
       let {
         selectedNumbers,
         usedNumbers
       } = prevState;
-
 
       if (selectedNumbers.indexOf(number) >= 0) {
         selectedNumbers = selectedNumbers.filter(sN => sN !== number)
@@ -98,7 +146,6 @@ class Game extends React.Component {
   }
 
   numberStatus(number) {
-    console.log('GETTING CALLED')
     if (this.state.usedNumbers.indexOf(number) >= 0) {
       return 'used'
     }
@@ -112,7 +159,6 @@ class Game extends React.Component {
   }
 
   render() {
-    console.log(this.gameIsDone)
     return (
       <div className="game">
         <div className="help">
@@ -121,7 +167,7 @@ class Game extends React.Component {
         </div>
         <div className="body">
           <div className="stars">
-            {this.gameIsDone ? this.renderPlayAgain(): this.renderStars()}
+            {this.gameIsDone ? this.state.seconds > 0 ? this.renderPlayAgain(): this.renderGameOver() : this.renderStars()}
           </div>
           <div className="play-numbers">
           {this.numbers.map(number => {
@@ -135,7 +181,8 @@ class Game extends React.Component {
               )
           }
           )}
-
+          </div>
+          <div className="timer">
           </div>
         </div>
       </div>

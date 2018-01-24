@@ -15,14 +15,6 @@ class Number extends React.PureComponent {
    }
   }
 
-  componentDidUpdate() {
-    console.log('Numebr updated');
-   }
-
-   componentWillUpdate(nextProps) {
-    console.log(this.props, nextProps);
-   }
-
   style() {
     return { backgroundColor: colors[this.props.status]}
   }
